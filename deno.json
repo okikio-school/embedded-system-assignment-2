@@ -1,0 +1,19 @@
+{
+  "lock": false,
+  "unstable": ["webgpu", "worker-options"],
+  "tasks": {
+    "dev": "deno run --unstable-webgpu -A --watch main.ts"
+  },
+  "imports": {
+    "@poolifier/poolifier-web-worker": "jsr:@poolifier/poolifier-web-worker@^0.4.31",
+    "@std/assert": "jsr:@std/assert@1",
+    "@tensorflow/tfjs": "npm:@tensorflow/tfjs",
+    "@tensorflow/tfjs-backend-webgpu": "npm:@tensorflow/tfjs-backend-webgpu",
+    "@tensorflow/tfjs-backend-webgl": "npm:@tensorflow/tfjs-backend-webgl",
+    "@tensorflow/tfjs-backend-wasm": "npm:@tensorflow/tfjs-backend-wasm",
+    "@tensorflow-models/coco-ssd": "npm:@tensorflow-models/coco-ssd",
+    "@tensorflow/tfjs-node-gpu": "npm:@tensorflow/tfjs-node-gpu",
+    "@tensorflow/tfjs-node": "npm:@tensorflow/tfjs-node",
+    "sharp": "npm:sharp"
+  }
+}
