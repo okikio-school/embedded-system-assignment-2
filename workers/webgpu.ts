@@ -75,7 +75,6 @@ async function extractFrames(data?: { imagePath: string, outputPath: string }) {
 
   // Save the annotated image
   await Deno.writeFile(outputPath, canvas.toBuffer());
-  canvas.dispose();
 
   console.log("Writing frame:", outputPath);
   return { ok: 1 }
