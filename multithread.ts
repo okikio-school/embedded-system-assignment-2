@@ -50,6 +50,7 @@ async function extractFrames(videoPath: string, outputDir: string) {
 }
   
 async function main() {
+  console.time("Deno: Multithreading");
   const videoPath = 'test_video.mp4'; // Replace with your video file path
   const framesDir = 'frames';
   const outputDir = 'output';
@@ -77,6 +78,7 @@ async function main() {
   await pool.mapExecute(data);
 
   console.log('Processing complete. Check the output folder for results.');
+  console.timeEnd("Deno: Multithreading");
 }
 
 await main();
