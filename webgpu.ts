@@ -1,8 +1,8 @@
-import type { VideoFrame } from 'npm:libavjs-webcodecs-polyfill';
-import type { CanvasImageSource } from 'jsr:@gfx/canvas-wasm';
-import { load as loadWebCodecsPolyfill, VideoDecoder, EncodedVideoChunk } from 'npm:libavjs-webcodecs-polyfill';
-import LibAV from 'npm:@libav.js/variant-webm-vp9';
-import { createCanvas, loadImage } from 'jsr:@gfx/canvas-wasm';
+// import type { VideoFrame } from 'npm:libavjs-webcodecs-polyfill';
+// import type { CanvasImageSource } from 'jsr:@gfx/canvas-wasm';
+// import { load as loadWebCodecsPolyfill, VideoDecoder, EncodedVideoChunk } from 'npm:libavjs-webcodecs-polyfill';
+// import LibAV from 'npm:@libav.js/variant-webm-vp9';
+// import { createCanvas, loadImage } from 'jsr:@gfx/canvas-wasm';
 
 /**
  * Extracts frames from a video at 1 frame every 10 seconds.
@@ -108,75 +108,75 @@ import { createCanvas, loadImage } from 'jsr:@gfx/canvas-wasm';
  * @param videoPath - Path to the video file.
  * @param outputDir - Directory to save extracted frames.
  */
-async function extractFrames(videoPath: string, outputDir: string) {
-  // Create the output directory if it doesn't exist
-  await Deno.mkdir(outputDir, { recursive: true });
+// async function extractFrames(videoPath: string, outputDir: string) {
+//   // Create the output directory if it doesn't exist
+//   await Deno.mkdir(outputDir, { recursive: true });
 
-  await loadWebCodecsPolyfill({
-    LibAV: LibAV,
-  });
+//   await loadWebCodecsPolyfill({
+//     LibAV: LibAV,
+//   });
 
-  // Load the video data as ArrayBuffer
-  const videoData = await Deno.readFile(videoPath);
+//   // Load the video data as ArrayBuffer
+//   const videoData = await Deno.readFile(videoPath);
 
-  // Initialize variables for tracking frame interval
-  let frameCount = 0;
-  const frameInterval = 10_000; // 10 seconds in milliseconds
+//   // Initialize variables for tracking frame interval
+//   let frameCount = 0;
+//   const frameInterval = 10_000; // 10 seconds in milliseconds
 
-  const outputHandler = async (frame: VideoFrame) => {
-    // Create a canvas matching the frame dimensions
-    const canvas = createCanvas(frame.displayWidth, frame.displayHeight);
-    const context = canvas.getContext("2d");
+//   const outputHandler = async (frame: VideoFrame) => {
+//     // Create a canvas matching the frame dimensions
+//     const canvas = createCanvas(frame.displayWidth, frame.displayHeight);
+//     const context = canvas.getContext("2d");
 
-    // Draw the current frame to the canvas
-    context.drawImage(frame as unknown as CanvasImageSource, 0, 0, frame.displayWidth, frame.displayHeight);
+//     // Draw the current frame to the canvas
+//     context.drawImage(frame as unknown as CanvasImageSource, 0, 0, frame.displayWidth, frame.displayHeight);
 
-    // Save frame as PNG
-    const outputPath = `${outputDir}/frame_${String(frameCount).padStart(4, "0")}.png`;
-    const pngData = canvas.toBuffer("image/png");
-    await Deno.writeFile(outputPath, new Uint8Array(pngData));
+//     // Save frame as PNG
+//     const outputPath = `${outputDir}/frame_${String(frameCount).padStart(4, "0")}.png`;
+//     const pngData = canvas.toBuffer("image/png");
+//     await Deno.writeFile(outputPath, new Uint8Array(pngData));
 
-    frameCount++;
-    frame.close(); // Free resources
-  };
+//     frameCount++;
+//     frame.close(); // Free resources
+//   };
 
-  // Configure the decoder with appropriate codec (adjust as per video codec)
-  const decoder = new VideoDecoder({
-    output: outputHandler,
-    error: (error: any) => console.error("Decoding error:", error),
-  });
+//   // Configure the decoder with appropriate codec (adjust as per video codec)
+//   const decoder = new VideoDecoder({
+//     output: outputHandler,
+//     error: (error: any) => console.error("Decoding error:", error),
+//   });
 
-  // Assume codec for demonstration; should match video format
-  decoder.configure({ codec: "vp09" });
+//   // Assume codec for demonstration; should match video format
+//   decoder.configure({ codec: "vp09" });
 
-  try {
-    // Create and decode chunks at frameInterval (e.g., every 10 seconds)
-    const bufferSource = videoData;
-    let timestamp = 0;
+//   try {
+//     // Create and decode chunks at frameInterval (e.g., every 10 seconds)
+//     const bufferSource = videoData;
+//     let timestamp = 0;
 
-    while (timestamp < bufferSource.byteLength) {
-      const chunk = new EncodedVideoChunk({
-        type: "key",
-        timestamp,
-        data: bufferSource.slice(timestamp, timestamp + frameInterval),
-      });
-      decoder.decode(chunk);
-      timestamp += frameInterval;
-    }
-  } catch (error) {
-    console.error("Error processing video:", error);
-  }
-}
+//     while (timestamp < bufferSource.byteLength) {
+//       const chunk = new EncodedVideoChunk({
+//         type: "key",
+//         timestamp,
+//         data: bufferSource.slice(timestamp, timestamp + frameInterval),
+//       });
+//       decoder.decode(chunk);
+//       timestamp += frameInterval;
+//     }
+//   } catch (error) {
+//     console.error("Error processing video:", error);
+//   }
+// }
 
 
-import { extname, join } from "jsr:@std/path/posix";
+// import { extname, join } from "jsr:@std/path/posix";
 
-function yuvToRgb(y: number, u: number, v: number): [number, number, number] {
-  const r = y + 1.402 * (v - 128);
-  const g = y - 0.344136 * (u - 128) - 0.714136 * (v - 128);
-  const b = y + 1.772 * (u - 128);
-  return [Math.max(0, Math.min(255, r)), Math.max(0, Math.min(255, g)), Math.max(0, Math.min(255, b))];
-}
+// function yuvToRgb(y: number, u: number, v: number): [number, number, number] {
+//   const r = y + 1.402 * (v - 128);
+//   const g = y - 0.344136 * (u - 128) - 0.714136 * (v - 128);
+//   const b = y + 1.772 * (u - 128);
+//   return [Math.max(0, Math.min(255, r)), Math.max(0, Math.min(255, g)), Math.max(0, Math.min(255, b))];
+// }
 
 /**
  * Extracts frames from a video using ff_decode_filter_multi with ImageData output.
@@ -300,30 +300,48 @@ import {
 } from 'jsr:@poolifier/poolifier-web-worker'
 
 // a fixed web worker pool
-// const pool = new FixedThreadPool(
-//   availableParallelism(),
-//   new URL('./workers/worker.ts', import.meta.url),
-//   {
-//     errorEventHandler: (e) => {
-//       console.error(e)
-//     },
-//     workerOptions: {
-//       type: "module",
-//       deno: {
-//         permissions: "inherit",
-//       },
-//     }
-//   },
-// );
+const pool = new FixedThreadPool(
+  availableParallelism(),
+  new URL('./workers/worker.ts', import.meta.url),
+  {
+    errorEventHandler: (e) => {
+      console.error(e)
+    },
+    workerOptions: {
+      type: "module",
+      deno: {
+        permissions: "inherit",
+      },
+    }
+  },
+);
 
-// pool.eventTarget?.addEventListener(
-//   PoolEvents.ready,
-//   () => console.info('Pool is ready'),
-// )
-// pool.eventTarget?.addEventListener(
-//   PoolEvents.busy,
-//   () => console.info('Pool is busy'),
-// )
+pool.eventTarget?.addEventListener(
+  PoolEvents.ready,
+  () => console.info('Pool is ready'),
+)
+pool.eventTarget?.addEventListener(
+  PoolEvents.busy,
+  () => console.info('Pool is busy'),
+)
+
+async function extractFrames(videoPath: string, outputDir: string) {
+  // Create the output directory if it doesn't exist
+  await Deno.mkdir(outputDir, { recursive: true });
+
+  const cmd = new Deno.Command("ffmpeg", {
+    args: ["-i", videoPath, "-vf", "fps=1/10", `${outputDir}/frame_%04d.png`],
+    stderr: "piped",
+    stdout: "piped",
+  });
+  const { code, stderr } = await cmd.output();
+
+  if (code !== 0) {
+    const errorString = new TextDecoder().decode(stderr);
+    console.error("ffmpeg failed:", errorString);
+    Deno.exit(code);
+  }
+}
 
 async function main() {
   const videoPath = 'output.webm'; // test_video3.mp4 // Replace with your video file path
@@ -339,23 +357,23 @@ async function main() {
   console.log('Processing images...');
   await Deno.mkdir(outputDir, { recursive: true });
 
-  // const data = [];
-  // for await (const entry of Deno.readDir(framesDir)) {
-  //   if (entry.isFile && entry.name.endsWith('.png')) {
-  //     const imagePath = `${framesDir}/${entry.name}`;
-  //     const outputPath = `${outputDir}/${entry.name}`;
+  const data = [];
+  for await (const entry of Deno.readDir(framesDir)) {
+    if (entry.isFile && entry.name.endsWith('.png')) {
+      const imagePath = `${framesDir}/${entry.name}`;
+      const outputPath = `${outputDir}/${entry.name}`;
 
-  //     console.log(`Processing ${entry.name}...`);
-  //     data.push({ imagePath, outputPath });
-  //   }
-  // }
+      console.log(`Processing ${entry.name}...`);
+      data.push({ imagePath, outputPath });
+    }
+  }
 
-  // await pool.mapExecute(data, 'processImage');
+  await pool.mapExecute(data, 'processImage');
 
   console.log('Processing complete. Check the output folder for results.');
 }
 
 await main();
 
-// await pool.destroy()
+await pool.destroy()
 
